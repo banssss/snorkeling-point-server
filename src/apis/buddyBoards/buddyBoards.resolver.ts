@@ -1,5 +1,7 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { BuddyBoardsService } from './buddyBoards.service';
+import { CreateBuddyBoardInput } from './dto/createBuddyBoard.input';
+import { UpdateBuddyBoardInput } from './dto/updateBuddyBoard.input';
 import { BuddyBoard } from './entities/buddyBoard.entity';
 
 @Resolver()
@@ -37,31 +39,42 @@ export class BuddyBoardsResolver {
 
   @Mutation(() => BuddyBoard, { description: 'Return : 생성된 BuddyBoard' })
   createBuddyBoard(
-    @Args('createBuddyBoardInput') createBuddyBoardInput: CreateBuddyBoardInput, //
+    @Args('userId', { description: 'BuddyBoard를 생성하는 User의 id(Host)' })
+    userId: string,
+    @Args('snkBoardId', { description: 'BuddyBoard를 생성할 SnkBoard의 id' })
+    snkBoardId: string,
+    @Args('createBuddyBoardInput', {
+      description: 'BuddyBoard 입력값(제목, 상세내용, 모집일시, 모집인원)',
+    })
+    createBuddyBoardInput: CreateBuddyBoardInput,
   ) {
-    return this.buddyBoardsService.create({ createBuddyBoardInput });
-  }
-
-  @Mutation(() => BuddyBoard, {
-    description:
-      'Return : 수정된 BuddyBoard - 업데이트 로직 논의 필요 (버디보드 연결)',
-  })
-  updateBuddyBoard(
-    @Args('buddyBoardId', { description: '수정할 BuddyBoard Id' })
-    buddyBoardId: string,
-    @Args('updateBuddyBoardInput') updateBuddyBoardInput: UpdateBuddyBoardInput,
-  ) {
-    return this.buddyBoardsService.update({
-      buddyBoardId,
-      updateBuddyBoardInput,
+    return this.buddyBoardsService.create({
+      userId,
+      snkBoardId,
+      createBuddyBoardInput,
     });
   }
 
-  @Mutation(() => Boolean, { description: 'Return : 삭제 성공 여부' })
-  deleteBuddyBoard(
-    @Args('buddyBoardId', { description: '삭제할 BuddyBoard Id' })
-    buddyBoardId: string, //
-  ) {
-    return this.buddyBoardsService.delete({ buddyBoardId });
-  }
+  // @Mutation(() => BuddyBoard, {
+  //   description:
+  //     'Return : 수정된 BuddyBoard - 업데이트 로직 논의 필요 (버디보드 연결)',
+  // })
+  // updateBuddyBoard(
+  //   @Args('buddyBoardId', { description: '수정할 BuddyBoard Id' })
+  //   buddyBoardId: string,
+  //   @Args('updateBuddyBoardInput') updateBuddyBoardInput: UpdateBuddyBoardInput,
+  // ) {
+  //   return this.buddyBoardsService.update({
+  //     buddyBoardId,
+  //     updateBuddyBoardInput,
+  //   });
+  // }
+
+  // @Mutation(() => Boolean, { description: 'Return : 삭제 성공 여부' })
+  // deleteBuddyBoard(
+  //   @Args('buddyBoardId', { description: '삭제할 BuddyBoard Id' })
+  //   buddyBoardId: string, //
+  // ) {
+  //   return this.buddyBoardsService.delete({ buddyBoardId });
+  // }
 }
