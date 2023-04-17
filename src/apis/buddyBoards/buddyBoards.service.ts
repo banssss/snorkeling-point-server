@@ -46,7 +46,6 @@ export class BuddyBoardsService {
         buddyBoardImages: true,
         buddyParties: {
           user: true,
-          role: true,
         },
         buddyBoardComments: true,
       },
